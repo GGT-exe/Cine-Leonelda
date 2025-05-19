@@ -1,0 +1,31 @@
+<div class="relative w-full h-[50vh] min-h-[400px] overflow-hidden">
+  <!-- Imagen de fondo -->
+  <div class="absolute inset-0">
+    <img 
+      src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+      alt="Películas en cartelera" 
+      class="w-full h-full object-cover object-center"
+    />
+    <!-- Overlay oscuro -->
+    <div class="absolute inset-0 bg-black/50"></div>
+  </div>
+
+  <!-- Contenido alineado a la derecha -->
+  <div class="relative z-10 h-full flex flex-col items-end justify-center pr-8 sm:pr-12 lg:pr-16">
+    <!-- Texto arriba -->
+    <div class="text-right mb-4 animate-fade-in">
+      <h2 class="text-2xl sm:text-2xl font-bold text-white mr-20">ESTRENOS</h2>
+      <p class="sm:text-lg text-gray-200 mt-1">Las mejores películas en cartelera</p>
+    </div>
+    
+    <!-- Botón abajo -->
+    <div class="animate-fade-in [animation-delay:200ms]">
+      <a 
+        href="#cartelera" 
+        class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-full text-sm sm:text-base transition-all transform hover:scale-105 inline-block mr-18"
+      >
+        Ver Cartelera
+      </a>
+    </div>
+  </div>
+</div>

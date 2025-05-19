@@ -1,57 +1,77 @@
+---
+const currentPath = Astro.url.pathname;
+---
+
 <div class="bg-black">
-  <header class="absolute inset-x-0 top-0 z-50">
-    <h1 class="flex items-center justify-center p-4 text-3xl font-bold text-red-600">
-      CINE LEONELDA
-    </h1>
-    <nav class="flex items-center justify-center p-5 lg:px-100" aria-label="Global">
-      <div class="flex lg:flex-1">
-        <a href="#" class="-m-1.5 p-1.5">
-          <span class="sr-only">Your Company</span>
-          <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="">
-        </a>
-      </div>
-      <div class="flex lg:hidden">
-        <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
-          <span class="sr-only">Open main menu</span>
-          <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
-        </button>
-      </div>
-      <div class="hidden lg:flex lg:gap-x-12">
-        <a href="#" class="text-sm/6 font-semibold text-gray-400">Inicio</a>
-        <a href="#" class="text-sm/6 font-semibold text-gray-400">Cartelera</a>
-        <a href="#" class="text-sm/6 font-semibold text-gray-400">Confitería</a>
-        <a href="#" class="text-sm/6 font-semibold text-gray-400">Sobre nosotros</a>
-      </div>
-    </nav>
-    <!-- Mobile menu, show/hide based on menu open state. -->
-    <div class="lg:hidden" role="dialog" aria-modal="true">
-      <!-- Background backdrop, show/hide based on slide-over state. -->
-      <div class="fixed inset-0 z-50"></div>
-      <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-black px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-        <div class="flex items-center justify-between">
-          <a href="#" class="-m-1.5 p-1.5">
-            <span class="sr-only">Your Company</span>
-            <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="">
+  <header class="sticky top-0 z-50 bg-black/80 backdrop-blur-sm">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-4">
+        <div class="flex items-center space-x-2">
+          <img class="h-10 w-auto" src="/path/to/your-logo.svg" alt="Cine Leonelda">
+          <h1 class="text-3xl font-bold text-red-600 hover:text-red-500 transition-colors">
+            CINE LEONELDA
+          </h1>
+        </div>
+        <nav class="hidden lg:flex items-center space-x-8">
+          <a
+            href="/"
+            class={`relative text-lg font-medium text-white transition-all duration-300
+              after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
+              after:z-[-1] ${currentPath === '/' ? 'after:bg-white' : 'after:bg-transparent'}`}
+          >
+            Inicio
           </a>
-          <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700">
-            <span class="sr-only">Close menu</span>
-            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+
+          <a
+            href="/"
+            class={`relative text-lg font-medium text-white transition-all duration-300
+              after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
+              after:z-[-1] ${currentPath === '/' ? 'after:bg-white' : 'after:bg-transparent'}`}
+          >
+            Cartelera
+          </a>
+          
+          <a
+            href="/"
+            class={`relative text-lg font-medium text-white transition-all duration-300
+              after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
+              after:z-[-1] ${currentPath === '/' ? 'after:bg-white' : 'after:bg-transparent'}`}
+          >
+            Confitería
+          </a>
+
+          <a
+            href="/"
+            class={`relative text-lg font-medium text-white transition-all duration-300
+              after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
+              after:z-[-1] ${currentPath === '/' ? 'after:bg-white' : 'after:bg-transparent'}`}
+          >
+            Sobre Nosotros
+          </a>
+
+          <a href="#" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition-colors">Comprar Entradas</a>
+        </nav>
+
+        <!-- Botón móvil -->
+        <div class="lg:hidden">
+          <button type="button" class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none">
+            <span class="sr-only">Abrir menú</span>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
         </div>
-        <div class="mt-6 flow-root">
-          <div class="-my-6 divide-y divide-gray-500/10">
-            <div class="space-y-2 py-6">
-              <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-400 hover:bg-red-50">Inicio</a>
-              <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-400 hover:bg-gray-50">Cartelera</a>
-              <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-400 hover:bg-gray-50">Confitería</a>
-              <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-400 hover:bg-gray-50">Sobre nosotros</a>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+
+    <!-- Menú móvil (oculto por defecto) -->
+    <div class="lg:hidden hidden" id="mobile-menu">
+      <div class="space-y-1 px-2 pb-3 pt-2">
+        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Inicio</a>
+        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Cartelera</a>
+        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Confitería</a>
+        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Sobre Nosotros</a>
+        <a href="#" class="block w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-center font-medium mt-2">Comprar Entradas</a>
       </div>
     </div>
   </header>
