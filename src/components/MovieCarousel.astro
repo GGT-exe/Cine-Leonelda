@@ -1,0 +1,99 @@
+---
+import { movies } from '../data/movies';
+import Horario from './Horario.astro';
+import HorarioTabla from './HorarioTabla.astro';
+---
+
+<div class="relative" id="movieCarousel">
+  <div class="overflow-hidden">
+    <div class="flex transition-transform duration-300" id="carouselContainer">
+      {movies.map((movie) => (
+        <div class="w-full flex-shrink-0 px-4" data-id={movie.id}>
+          <Horario title={movie.title} image={movie.image} info={movie.info} class="mb-8" />
+          <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 text-amber-400 text-center">
+              Horarios de Proyección
+            </h2>
+            <HorarioTabla movieData={movie.schedule} />
+          </section>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <button 
+    class="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-red-800 text-white p-4 rounded-full z-10 transition-all carousel-button"
+    id="prevButton"
+    aria-label="Película anterior"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+
+  <button 
+    class="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-red-800 text-white p-4 rounded-full z-10 transition-all carousel-button"
+    id="nextButton"
+    aria-label="Siguiente película"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+
+  <div class="flex justify-center gap-2 mt-6" id="indicators">
+    {movies.map((_, index) => (
+      <button 
+        class={`w-3 h-3 rounded-full transition-colors ${index === 0 ? 'bg-amber-400' : 'bg-gray-600'}`}
+        data-index={index}
+        aria-label={`Ir a película ${index + 1}`}
+      />
+    ))}
+  </div>
+</div>
+
+<script is:inline>
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('carouselContainer');
+  const prevBtn = document.getElementById('prevButton');
+  const nextBtn = document.getElementById('nextButton');
+  const indicators = Array.from(document.querySelectorAll('#indicators button'));
+  
+  let currentIndex = 0;
+  const totalMovies = indicators.length;
+
+  function updateCarousel() {
+    container.style.transform = `translateX(-${currentIndex * 100}%)`;
+    
+    indicators.forEach((indicator, i) => {
+      if (i === currentIndex) {
+        indicator.classList.add('bg-amber-400');
+        indicator.classList.remove('bg-gray-600');
+      } else {
+        indicator.classList.add('bg-gray-600');
+        indicator.classList.remove('bg-amber-400');
+      }
+    });
+  }
+
+  prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + totalMovies) % totalMovies;
+    updateCarousel();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % totalMovies;
+    updateCarousel();
+  });
+
+  indicators.forEach(indicator => {
+    indicator.addEventListener('click', () => {
+      currentIndex = parseInt(indicator.dataset.index);
+      updateCarousel();
+    });
+  });
+
+  
+  updateCarousel();
+});
+</script>

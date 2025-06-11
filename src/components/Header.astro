@@ -1,77 +1,112 @@
----
-const currentPath = Astro.url.pathname;
----
-
 <div class="bg-black">
-  <header class="sticky top-0 z-50 bg-black/80 backdrop-blur-sm">
+  <header class="sticky top-0 z-50 bg-black/80 backdrop-blur-sm border-b-2 border-solid border-red-600">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between py-4">
         <div class="flex items-center space-x-2">
-          <img class="h-10 w-auto" src="/path/to/your-logo.svg" alt="Cine Leonelda">
-          <h1 class="text-3xl font-bold text-red-600 hover:text-red-500 transition-colors">
+          <img
+            class="h-10 w-auto"
+            src="IMG/logoCineLeonelda.png"
+            alt="Cine Leonelda"
+          />
+          <h1
+            class="text-3xl font-bold text-red-600 hover:text-red-500 transition-colors ml-10"
+          >
             CINE LEONELDA
           </h1>
         </div>
         <nav class="hidden lg:flex items-center space-x-8">
           <a
             href="/"
-            class={`relative text-lg font-medium text-white transition-all duration-300
-              after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
-              after:z-[-1] ${currentPath === '/' ? 'after:bg-white' : 'after:bg-transparent'}`}
+            class="text-lg font-medium text-gray-300 hover:text-white transition-colors px-3 py-2 rounded-md"
+            >Inicio</a
           >
-            Inicio
+          <a
+            href="/cartelera"
+            class="text-lg font-medium text-gray-300 hover:text-white transition-colors px-3 py-2 rounded-md"
+            >Cartelera</a
+          >
+          <a
+            href="/confiteria"
+            class="text-lg font-medium text-gray-300 hover:text-white transition-colors px-3 py-2 rounded-md"
+            >Confitería</a
+          >
+          <a
+            href="/nosotros"
+            class="text-lg font-medium text-gray-300 hover:text-white transition-colors px-3 py-2 rounded-md"
+            >Sobre Nosotros</a
+          >
+          <a
+            href="/compra"
+            class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition-colors"
+            >Comprar Entradas</a
+          >
+          <a href="/iniciarsesion">
+            <img
+              class="h-10 w-auto"
+              src="IMG/UserIcon.png"
+              alt="Iniciar sesión"
+            />
           </a>
 
-          <a
-            href="/"
-            class={`relative text-lg font-medium text-white transition-all duration-300
-              after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
-              after:z-[-1] ${currentPath === '/' ? 'after:bg-white' : 'after:bg-transparent'}`}
-          >
-            Cartelera
-          </a>
-          
-          <a
-            href="/"
-            class={`relative text-lg font-medium text-white transition-all duration-300
-              after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
-              after:z-[-1] ${currentPath === '/' ? 'after:bg-white' : 'after:bg-transparent'}`}
-          >
-            Confitería
-          </a>
 
-          <a
-            href="/"
-            class={`relative text-lg font-medium text-white transition-all duration-300
-              after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px]
-              after:z-[-1] ${currentPath === '/' ? 'after:bg-white' : 'after:bg-transparent'}`}
-          >
-            Sobre Nosotros
-          </a>
-
-          <a href="#" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition-colors">Comprar Entradas</a>
         </nav>
 
-        <!-- Botón móvil -->
         <div class="lg:hidden">
-          <button type="button" class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none">
+          <button
+            type="button"
+            class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none"
+          >
             <span class="sr-only">Abrir menú</span>
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
             </svg>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Menú móvil (oculto por defecto) -->
     <div class="lg:hidden hidden" id="mobile-menu">
       <div class="space-y-1 px-2 pb-3 pt-2">
-        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Inicio</a>
-        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Cartelera</a>
-        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Confitería</a>
-        <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Sobre Nosotros</a>
-        <a href="#" class="block w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-center font-medium mt-2">Comprar Entradas</a>
+        <a
+          href="/"
+
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+          >Inicio</a
+        >
+        <a
+          href="/cartelera"
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+          >Cartelera</a
+        >
+        <a
+          href="/confiteria"
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+          >Confitería</a
+        >
+        <a
+          href="/nosotros"
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+          >Sobre Nosotros</a
+        >
+        <a
+          href="#"
+          class="block w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-center font-medium mt-2"
+          >Comprar Entradas</a
+        >
+        <a
+          href="/iniciarsesion"
+          class="block w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-center font-medium mt-2"
+          >Iniciar sesión</a
+        >
       </div>
     </div>
   </header>

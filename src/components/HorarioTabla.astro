@@ -1,0 +1,79 @@
+---
+export interface Props {
+  movieData: {
+    days: Record<
+      string,
+      {
+        times: string[];
+        duration: string;
+        rating: string;
+      }
+    >;
+  };
+}
+
+const { movieData } = Astro.props;
+const daysOrder = [
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+  "Domingo",
+];
+---
+
+<div
+  class="overflow-x-auto rounded-xl shadow-[0_10px_25px_rgba(239,68,68,0.3)]"
+>
+  <table class="w-full border-separate border-spacing-0">
+    <thead>
+      <tr class="bg-red-800 text-white">
+        <th class="p-3 font-bold border-b border-gray-700">Día</th>
+        <th class="p-3 font-bold border-b border-gray-700">Horarios</th>
+        <th class="p-3 font-bold border-b border-gray-700">Duración</th>
+        <th class="p-3 font-bold border-b border-gray-700">Clasificación</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        daysOrder.map((day, index) => {
+          const dayData = movieData.days[day] || {
+            times: [],
+            duration: "",
+            rating: "",
+          };
+          const isLast = index === daysOrder.length - 1;
+
+          return (
+            <tr class="hover:bg-gray-800/50 transition duration-200">
+              <td
+                class={`p-3 font-medium text-gray-200 ${isLast ? "rounded-bl-xl" : ""}`}
+              >
+                {day}
+              </td>
+              <td class="p-3 text-gray-400">
+                {dayData.times.length > 0 ? (
+                  <div class="flex flex-wrap gap-2">
+                    {dayData.times.map((time) => (
+                      <span class="px-2 py-1 bg-gray-700 rounded-md">
+                        {time}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  "-"
+                )}
+              </td>
+              <td class="p-3 text-gray-400">{dayData.duration || "-"}</td>
+              <td class={`p-3 text-gray-400 ${isLast ? "rounded-br-xl" : ""}`}>
+                {dayData.rating || "-"}
+              </td>
+            </tr>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</div>
