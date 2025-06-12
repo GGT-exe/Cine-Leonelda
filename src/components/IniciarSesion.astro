@@ -68,3 +68,17 @@
 </div>
 </body>
 </html>
+
+<script is:inline>
+document.querySelector("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = document.querySelector("input[name='email']").value;
+  const name = document.querySelector("input[name='name']")?.value || 'Usuario';
+
+  // Simula login
+  localStorage.setItem("usuario", JSON.stringify({ email, name }));
+
+  // Redirige a la cartelera o donde veas la película
+  window.location.href = "/cartelera"; 
+});
+</script>

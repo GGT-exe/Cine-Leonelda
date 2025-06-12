@@ -1,4 +1,4 @@
-  console.log("✅ modalAsientos.js cargado");
+console.log("✅ modalAsientos.js cargado");
 
 export default class ModalAsientos {
   constructor(peliculaId) {
@@ -26,12 +26,9 @@ export default class ModalAsientos {
             ? 'bg-green-500'
             : 'bg-gray-300';
 
-          // 🔸 Aquí defines el color del texto
           let textColor = 'text-black';
-          if (ocupado) textColor = 'text-white';
-          else if (seleccionado) textColor = 'text-white';
+          if (ocupado || seleccionado) textColor = 'text-white';
 
-          // Etiqueta A1, B2, etc.
           const fila = String.fromCharCode(65 + Math.floor(i / 5));
           const columna = (i % 5) + 1;
           const etiqueta = `${fila}${columna}`;
@@ -39,18 +36,15 @@ export default class ModalAsientos {
           return `<div data-index="${i}" class="asiento ${clases} ${textColor} w-10 h-10 rounded cursor-pointer flex items-center justify-center text-sm font-medium">
             ${ocupado ? 'X' : etiqueta}
           </div>`;
-
         }).join('')}
-
         </div>
-          <div class="flex justify-end gap-2">
-            <button id="cerrar-modal" class="bg-red-500 text-white px-4 py-2 rounded">Cancelar</button>
-            <button id="guardar-asientos" class="bg-green-500 text-white px-4 py-2 rounded">Guardar</button>
-          </div>
+        <div class="flex justify-end gap-2">
+          <button id="cerrar-modal" class="bg-red-500 text-white px-4 py-2 rounded">Cancelar</button>
+          <button id="guardar-asientos" class="bg-green-500 text-white px-4 py-2 rounded">Guardar</button>
+        </div>
       </div>
     `;
 
-    // Eventos de clic para los asientos
     modal.querySelectorAll('.asiento').forEach(el => {
       if (!el.classList.contains('bg-red-500')) {
         el.addEventListener('click', () => {
@@ -60,15 +54,10 @@ export default class ModalAsientos {
       }
     });
 
-    // Evento cerrar
-    modal.querySelector('#cerrar-modal').addEventListener('click', () => {
-      this.cerrar();
-    });
+    modal.querySelector('#cerrar-modal').addEventListener('click', () => this.cerrar());
 
-    // Evento guardar
     modal.querySelector('#guardar-asientos').addEventListener('click', () => {
       const seleccionados = Array.from(modal.querySelectorAll('.asiento.bg-green-500')).map(el => el.dataset.index);
-      console.log('Asientos seleccionados:', seleccionados);
       localStorage.setItem(`asientos-${this.peliculaId}`, JSON.stringify(seleccionados));
       this.cerrar();
     });
@@ -76,21 +65,20 @@ export default class ModalAsientos {
     return modal;
   }
 
-    mostrar() {
-      console.log(`🟢 Mostrando modal para: ${this.peliculaId}`);
-      document.body.appendChild(this.modal);
-    }
+  mostrar() {
+    console.log(`🟢 Mostrando modal para: ${this.peliculaId}`);
+    document.body.appendChild(this.modal);
+  }
 
   cerrar() {
     this.modal.remove();
   }
-
-
 }
 
-window.abrirModal = (dia) => {
-  console.log("🟡 abrirModal llamado con:", dia);
-  const modal = new ModalAsientos(dia);
+// ✅ función global para abrir el modal
+window.abrirModal = (peliculaId, dia) => {
+  const idUnico = `${peliculaId}-${dia}`;
+  console.log("🟡 abrirModal llamado con:", idUnico);
+  const modal = new ModalAsientos(idUnico);
   modal.mostrar();
 };
-

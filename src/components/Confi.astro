@@ -1,5 +1,4 @@
 ---
-
 interface ProductoBase {
   id: number;
   nombre: string;
@@ -12,6 +11,7 @@ interface ProductoIndividual extends ProductoBase {
 }
 
 interface ProductoCombo extends ProductoBase {
+  imagen?: string;
   descripcion: string;
   tipo: 'combo';
 }
@@ -27,129 +27,156 @@ const productos: CategoriaProductos[] = [
   {
     categoria: "Individuales",
     items: [
-      { id: 1, nombre: "Perro Caliente", precio: 12000, imagen: "/images/perro.webp", tipo: 'individual' },
-      { id: 2, nombre: "Palomitas Grandes", precio: 10000, imagen: "/images/palomitas.webp", tipo: 'individual' },
-      { id: 3, nombre: "Gaseosa 500ml", precio: 5000, imagen: "/images/gaseosa.webp", tipo: 'individual' },
-      { id: 4, nombre: "Chocolatina", precio: 3500, imagen: "/images/chocolatina.webp", tipo: 'individual' }
+      { id: 1, nombre: "Perro Caliente", precio: 12000, imagen: "IMG/Perro-Caliente.jpg", tipo: 'individual' },
+      { id: 2, nombre: "Palomitas 150g", precio: 10000, imagen: "IMG/crispetas1.jpg", tipo: 'individual' },
+      { id: 3, nombre: "Palomitas 120g", precio: 7000, imagen: "IMG/crispetas2.jpg", tipo: 'individual' },
+      { id: 4, nombre: "Gaseosa 500ml", precio: 5000, imagen: "IMG/gaseosa.jpg", tipo: 'individual' },
+      { id: 5, nombre: "Chocolatina", precio: 3500, imagen: "IMG/chocolatina.png", tipo: 'individual' }
     ]
   },
   {
     categoria: "Combos",
     items: [
-      { 
-        id: 5, 
-        nombre: "Combo Clásico", 
-        precio: 20000,
-        descripcion: "1 Perro + Palomitas Medianas + Gaseosa",
-        tipo: 'combo'
-      },
-      { 
-        id: 6, 
-        nombre: "Combo Pareja", 
-        precio: 35000,
-        descripcion: "2 Perros + Palomitas Grandes + 2 Gaseosas",
-        tipo: 'combo'
-      },
-      { 
-        id: 7, 
-        nombre: "Combo Familiar", 
-        precio: 45000,
-        descripcion: "3 Perros + Palomitas Gigantes + 3 Gaseosas + 2 Chocolatinas",
-        tipo: 'combo'
-      }
+      { id: 6, nombre: "Combo Clásico", precio: 20000, imagen: "IMG/ComboClasico.jpg", descripcion: "1 Perro + Palomitas 150g + Gaseosa", tipo: 'combo' },
+      { id: 7, nombre: "Combo Amigos", precio: 40000, imagen: "IMG/ComboAmigos.jpg", descripcion: "2 Perros + Palomitas 150g + 2 Gaseosas", tipo: 'combo' },
+      { id: 8, nombre: "Combo Pareja", precio: 30000, imagen: "IMG/ComboPareja.jpg", descripcion: "2 Perros + Palomitas 150g + 2 Gaseosas + 2 Chocolatinas", tipo: 'combo' },
+      { id: 9, nombre: "Combo Familiar", precio: 60000, imagen: "IMG/ComboFamiliar.jpg", descripcion: "3 Perros + Palomitas 150g + 3 Gaseosas + 3 Chocolatinas", tipo: 'combo' },
+      { id: 10, nombre: "Combo Especial", precio: 80000, imagen: "IMG/ComboEspecial.jpg", descripcion: "4 Perros + Palomitas 150g + 4 Gaseosas + 4 Chocolatinas", tipo: 'combo' }
     ]
   }
 ];
 ---
 
-<div class="max-w-4xl mx-auto p-6 bg-black rounded-xl shadow-xl border border-gray-800">
+<!-- Botón flotante solo visible en móvil -->
+<button 
+  class="fixed bottom-4 right-4 z-50 md:hidden bg-amber-500 hover:bg-amber-600 text-black px-4 py-2 rounded-full font-semibold shadow-lg"
+  id="abrir-carrito-btn"
+>
+  Ver Pedido
+</button>
+
+<!-- Contenedor Principal -->
+<div class="max-w-7xl mx-auto p-6 bg-black rounded-xl shadow-xl border border-gray-800">
   <h2 class="text-3xl font-bold text-center mb-8 text-amber-400 border-b border-red-800 pb-4">
     Confitería Cinematográfica
   </h2>
 
-  <div class="overflow-x-auto mb-12">
-    <table class="w-full border-collapse">
-      <thead>
-        <tr class="bg-red-800 text-white">
-          <th class="p-4 text-left">Producto</th>
-          <th class="p-4 text-left">Descripción</th>
-          <th class="p-4 text-right">Precio</th>
-          <th class="p-4 text-center">Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        {productos.map(grupo => (
-          <>
-            <!-- Encabezado de Categoría -->
-            <tr class="bg-gray-900">
-              <td colspan="4" class="p-3 text-xl font-bold text-amber-400">
-                {grupo.categoria}
-              </td>
-            </tr>
-            
-            <!-- Lista de Productos -->
+  <div class="flex gap-6">
+    <!-- Productos -->
+    <div class="flex-1">
+      {productos.map(grupo => (
+        <section class="mb-10">
+          <h3 class="text-2xl font-semibold text-amber-400 mb-4 border-b border-gray-900 pb-2">
+            {grupo.categoria}
+          </h3>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {grupo.items.map(producto => (
-              <tr class="border-b border-gray-700 hover:bg-gray-800/50 transition-colors">
-                <td class="p-4 text-white font-medium">{producto.nombre}</td>
-                <td class="p-4 text-gray-300">
+              <div class="bg-gray-900/50 p-3 rounded-lg shadow hover:shadow-xl flex flex-col items-center text-center text-sm">
+                <img 
+                  src={producto.imagen ?? "/images/fallback.webp"} 
+                  alt={producto.nombre} 
+                  class="w-30 h-30 object-contain rounded mb-2 bg-white"
+                />
+                <h4 class="text-white font-semibold text-base mb-1">{producto.nombre}</h4>
+                <p class="text-gray-400 text-xs mb-1">
                   {producto.tipo === 'combo' ? producto.descripcion : "Producto individual"}
-                </td>
-                <td class="p-4 text-right text-amber-400">
+                </p>
+                <p class="text-amber-400 font-semibold text-sm mb-2">
                   ${producto.precio.toLocaleString('es-CO')}
-                </td>
-                <td class="p-4 text-center">
-                  <button 
-                    class="bg-amber-500 hover:bg-amber-600 text-black px-4 py-2 rounded-lg font-medium transition-colors"
-                    data-id={producto.id}
-                    data-nombre={producto.nombre}
-                    data-precio={producto.precio}
-                  >
-                    Añadir
-                  </button>
-                </td>
-              </tr>
+                </p>
+                <button 
+                  class="bg-amber-500 hover:bg-amber-600 text-black px-3 py-1 rounded-lg font-medium transition-colors text-sm"
+                  data-id={producto.id}
+                  data-nombre={producto.nombre}
+                  data-precio={producto.precio}
+                >
+                  Añadir
+                </button>
+              </div>
             ))}
-          </>
-        ))}
-      </tbody>
-    </table>
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <!-- Carrito (Desktop) -->
+    <div class="w-80 sticky top-6 self-start bg-gray-900/50 p-5 rounded-lg border border-gray-800 h-fit hidden md:block" id="carrito-desktop">
+      <h3 class="text-xl font-bold mb-4 text-amber-400 border-b border-red-800 pb-2">
+        Tu Pedido
+      </h3>
+
+      <p class="text-gray-400 italic" id="carrito-vacio">Tu carrito está vacío</p>
+
+      <div id="carrito-items" class="hidden">
+        <div class="overflow-x-auto mb-4">
+          <table class="w-full border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-800 text-white">
+                <th class="p-2 text-left">Producto</th>
+                <th class="p-2 text-right">Precio</th>
+                <th class="p-2 text-right">Quitar</th>
+              </tr>
+            </thead>
+            <tbody id="carrito-body"></tbody>
+            <tfoot>
+              <tr class="bg-gray-800 text-white">
+                <td class="p-2 text-left font-bold">Total</td>
+                <td class="p-2 text-right font-bold text-amber-400" id="carrito-total" colspan="2">$0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <button 
+          class="w-full bg-red-700 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-bold transition-colors"
+          id="confirmar-compra"
+        >
+          Confirmar Compra - $0
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Carrito móvil tipo slide-over -->
+<div 
+  id="carrito-movil"
+  class="fixed top-0 right-0 h-full w-80 bg-gray-900 border-l border-gray-700 p-5 z-50 transform translate-x-full transition-transform duration-300 md:hidden"
+>
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-xl font-bold text-amber-400">Tu Pedido</h3>
+    <button id="cerrar-carrito-btn" class="text-red-500 hover:text-red-400 text-xl font-bold">✕</button>
   </div>
 
-  <div class="bg-gray-900 p-6 rounded-lg border border-gray-700" id="carrito">
-    <h3 class="text-2xl font-bold mb-4 text-amber-400 border-b border-red-800 pb-2">
-      Tu Pedido
-    </h3>
-    
-    <p class="text-gray-400 italic" id="carrito-vacio">Tu carrito está vacío</p>
-    
-    <div id="carrito-items" class="hidden">
-      <div class="overflow-x-auto mb-6">
-        <table class="w-full border-collapse">
-          <thead>
-            <tr class="bg-gray-800 text-white">
-              <th class="p-3 text-left">Producto</th>
-              <th class="p-3 text-right">Precio</th>
-            </tr>
-          </thead>
-          <tbody id="carrito-body"></tbody>
-          <tfoot>
-            <tr class="bg-gray-800 text-white">
-              <td class="p-3 text-left font-bold">Total</td>
-              <td class="p-3 text-right font-bold text-amber-400" id="carrito-total">
-                $0
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      
-      <button 
-        class="w-full bg-red-700 hover:bg-red-600 text-white py-3 px-6 rounded-lg font-bold transition-colors"
-        id="confirmar-compra"
-      >
-        Confirmar Compra - $0
-      </button>
+  <p class="text-gray-400 italic" id="carrito-vacio-movil">Tu carrito está vacío</p>
+
+  <div id="carrito-items-movil" class="hidden">
+    <div class="overflow-x-auto mb-4">
+      <table class="w-full border-collapse text-sm">
+        <thead>
+          <tr class="bg-gray-800 text-white">
+            <th class="p-2 text-left">Producto</th>
+            <th class="p-2 text-right">Precio</th>
+            <th class="p-2 text-right">Quitar</th>
+          </tr>
+        </thead>
+        <tbody id="carrito-body-movil"></tbody>
+        <tfoot>
+          <tr class="bg-gray-800 text-white">
+            <td class="p-2 text-left font-bold">Total</td>
+            <td class="p-2 text-right font-bold text-amber-400" id="carrito-total-movil" colspan="2">$0</td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
+
+    <button 
+      class="w-full bg-red-700 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-bold transition-colors"
+      id="confirmar-compra-movil"
+    >
+      Confirmar Compra - $0
+    </button>
   </div>
 </div>
 
@@ -157,13 +184,25 @@ const productos: CategoriaProductos[] = [
 document.addEventListener('DOMContentLoaded', () => {
   const carrito = [];
   let total = 0;
-  
+
   const carritoBody = document.getElementById('carrito-body');
+  const carritoBodyMovil = document.getElementById('carrito-body-movil');
   const carritoTotal = document.getElementById('carrito-total');
+  const carritoTotalMovil = document.getElementById('carrito-total-movil');
   const carritoSection = document.getElementById('carrito-items');
+  const carritoSectionMovil = document.getElementById('carrito-items-movil');
   const carritoVacio = document.getElementById('carrito-vacio');
+  const carritoVacioMovil = document.getElementById('carrito-vacio-movil');
   const confirmarBtn = document.getElementById('confirmar-compra');
-  
+  const confirmarBtnMovil = document.getElementById('confirmar-compra-movil');
+
+  const abrirCarritoBtn = document.getElementById('abrir-carrito-btn');
+  const cerrarCarritoBtn = document.getElementById('cerrar-carrito-btn');
+  const carritoMovil = document.getElementById('carrito-movil');
+
+  abrirCarritoBtn.addEventListener('click', () => carritoMovil.classList.remove('translate-x-full'));
+  cerrarCarritoBtn.addEventListener('click', () => carritoMovil.classList.add('translate-x-full'));
+
   document.querySelectorAll('[data-id]').forEach(button => {
     button.addEventListener('click', () => {
       const producto = {
@@ -171,59 +210,66 @@ document.addEventListener('DOMContentLoaded', () => {
         nombre: button.getAttribute('data-nombre'),
         precio: parseInt(button.getAttribute('data-precio'))
       };
-      
+
       carrito.push(producto);
       total += producto.precio;
       actualizarCarrito();
     });
   });
-  
-  confirmarBtn.addEventListener('click', () => {
+
+  confirmarBtn.addEventListener('click', confirmarCompra);
+  confirmarBtnMovil.addEventListener('click', confirmarCompra);
+
+  function confirmarCompra() {
     alert(`¡Pedido confirmado por $${total.toLocaleString('es-CO')}!\nGracias por tu compra.`);
     carrito.length = 0;
     total = 0;
     actualizarCarrito();
-  });
-  
+    carritoMovil.classList.add('translate-x-full');
+  }
+
   function actualizarCarrito() {
-    carritoBody.innerHTML = '';
-    
+    [carritoBody, carritoBodyMovil].forEach(body => body.innerHTML = '');
+
     if (carrito.length > 0) {
       carritoVacio.classList.add('hidden');
       carritoSection.classList.remove('hidden');
-      
-      carrito.forEach(item => {
-        const row = document.createElement('tr');
-        row.className = 'border-b border-gray-700';
-        row.innerHTML = `
-          <td class="p-3 text-white">${item.nombre}</td>
-          <td class="p-3 text-right text-amber-400">$${item.precio.toLocaleString('es-CO')}</td>
+      carritoVacioMovil.classList.add('hidden');
+      carritoSectionMovil.classList.remove('hidden');
+
+      carrito.forEach((item, index) => {
+        const rowHTML = `
+          <tr class="border-b border-gray-700">
+            <td class="p-2 text-white">${item.nombre}</td>
+            <td class="p-2 text-right text-amber-400">$${item.precio.toLocaleString('es-CO')}</td>
+            <td class="p-2 text-right">
+              <button class="text-red-500 hover:text-red-400 text-sm" data-remove="${index}">✕</button>
+            </td>
+          </tr>
         `;
-        carritoBody.appendChild(row);
+        carritoBody.insertAdjacentHTML('beforeend', rowHTML);
+        carritoBodyMovil.insertAdjacentHTML('beforeend', rowHTML);
       });
-      
+
+      document.querySelectorAll('[data-remove]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = parseInt(btn.getAttribute('data-remove'));
+          total -= carrito[index].precio;
+          carrito.splice(index, 1);
+          actualizarCarrito();
+        });
+      });
+
       carritoTotal.textContent = `$${total.toLocaleString('es-CO')}`;
+      carritoTotalMovil.textContent = `$${total.toLocaleString('es-CO')}`;
       confirmarBtn.textContent = `Confirmar Compra - $${total.toLocaleString('es-CO')}`;
+      confirmarBtnMovil.textContent = `Confirmar Compra - $${total.toLocaleString('es-CO')}`;
     } else {
       carritoVacio.classList.remove('hidden');
       carritoSection.classList.add('hidden');
+      carritoVacioMovil.classList.remove('hidden');
+      carritoSectionMovil.classList.add('hidden');
     }
   }
 });
 </script>
-
-<style>
-img {
-  max-width: 60px;
-  border-radius: 4px;
-  object-fit: cover;
-}
-
-button[data-id] {
-  min-width: 100px;
-}
-
-#carrito-items {
-  transition: all 0.3s ease;
-}
-</style>
