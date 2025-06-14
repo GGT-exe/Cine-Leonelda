@@ -1,11 +1,76 @@
 @import "tailwindcss";
+@tailwind utilities;
 
-header, nav, footer {
-  background-color: #000000;
+
+body {
+  @apply bg-black text-white;
 }
-nav ul {
+
+.horario-chip {
+  @apply px-2 py-1 bg-gray-700 rounded-md transition-colors;
+}
+
+.horario-chip:hover {
+  @apply bg-amber-500 text-gray-900;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in { animation: fadeIn 0.8s ease-out; }
+
+.carousel-button {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
   display: flex;
-  list-style: none;
-  padding: 0;
-  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-button:hover {
+  background-color: rgb(146, 64, 14);
+  transform: translateY(-50%) scale(1.1);
+}
+
+#prevButton {
+  left: 20px;
+}
+
+#nextButton {
+  right: 20px;
+}
+
+.comment-loading {
+  position: relative;
+}
+
+.comment-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }

@@ -1,0 +1,10 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RegisterForm from '../components/auth/RegisterForm.astro';
+
+const email = Astro.url.searchParams.get('email');
+---
+
+<Layout>
+  <RegisterForm initialEmail={email} />
+</Layout>

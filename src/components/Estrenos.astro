@@ -1,0 +1,36 @@
+---
+import Cardpeli from "./Cardpeli.astro";
+---
+
+<div class="bg-black">
+  <div
+    class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20 lg:max-w-7xl lg:px-8"
+  >
+    <h2 class="text-4xl font-bold tracking-tight text-white" id="cartelera">
+      Estrenos en cartelera
+    </h2>
+
+    <div class="mt-10 mx-auto max-w-7xl px-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+      <Cardpeli 
+        id="entrenaratudragon"
+        title="Cómo entrenar a tu dragón" 
+        price={13000} 
+        image="/IMG/EntrenaATuDragon.jpg" 
+      />
+      <Cardpeli
+        id="minecraft" 
+        title="Una película de Minecraft" 
+        price={12500} 
+        image="/IMG/Minecraft.jpg"
+      />
+      <Cardpeli
+        id="godzilla-kong"
+        title="Godzilla vs. Kong  ­"
+        price={12000}
+        image="/IMG/GodzillaKong.jpg"
+      />
+    </div>
+  </div>
+</div>
+
+

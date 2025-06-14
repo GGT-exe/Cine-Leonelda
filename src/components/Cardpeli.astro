@@ -1,0 +1,41 @@
+---
+export interface Props {
+  title: string;
+  price: number | string;
+  image: string;
+  id: string; 
+}
+
+const { title, price, image, id } = Astro.props;
+import BotonAsientos from "./BotonAsientos.astro";
+---
+
+<div class="pelicula1 w-64 mx-auto">
+  <img
+    src={image}
+    alt={`Poster de ${title}`}
+    class="h-80 w-60 object-cover mx-auto rounded-lg"
+  />
+  <div class="mt-4 flex justify-between text-white text-xl font-medium">
+    <h3>{title}</h3>
+    <span>{typeof price === "number" ? `$${price}` : price}</span>
+  </div>
+  <div class="mt-4">
+        <a
+        href="/cartelera"
+        class="mt-2 inline-block w-full bg-red-600 text-white text-sm font-medium py-2 text-center hover:bg-red-700 transition duration-200 rounded-md"
+    >
+        VER HORARIOS
+    </a>
+    <BotonAsientos peliculaId={id} />
+  </div>
+</div>
+
+<style>
+  .pelicula1 {
+    transition: transform 0.3s ease;
+  }
+  .pelicula1:hover {
+    transform: scale(1.05);
+  }
+</style>

@@ -1,0 +1,14 @@
+
+{
+  "peliculas": {
+    "minecraft": [
+      { "id": "A1", "disponible": true },
+      { "id": "A2", "disponible": true },
+      { "id": "B1", "disponible": true }
+    ],
+    "dune": [
+      { "id": "A1", "disponible": true },
+      { "id": "A2", "disponible": false }
+    ]
+  }
+}

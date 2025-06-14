@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="h-full bg-black">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta - Cine Leonelda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-full">
+<div class="flex min-h-screen bg-black">
+  <!-- Columna izquierda -->
+  <div class="hidden md:flex w-1/2 items-center justify-center bg-black p-12 h-screen">
+    <img 
+      class="h-auto max-w-full max-h-screen" 
+      src="IMG/logoCineLeonelda.png" 
+      alt="Cine Leonelda"
+    >
+  </div>
+
+  <!-- Columna derecha - Más compacta -->
+  <div class="w-full md:w-1/2 px-6 lg:px-8 flex flex-col justify-center h-screen">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm bg-gray-900/70 p-8 rounded-xl border-2 border-red-600/70 shadow-2xl shadow-red-900/30">
+      <div class="text-center">
+        <img class="mx-auto h-16 w-auto md:hidden mb-4" src="IMG/logoCineLeonelda.png" alt="Cine Leonelda">
+        <h2 class="text-2xl font-bold text-red-500">Crea una cuenta</h2>
+      </div>
+
+      <div class="mt-6">
+        <form class="space-y-4" id="registerForm">
+          <!-- Nombre completo -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Nombre completo</label>
+            <input
+              type="text"
+              id="name"
+              required
+              class="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+            >
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Correo electrónico</label>
+            <input
+              type="email"
+              id="email"
+              required
+              value={Astro.url.searchParams.get('email') || ''}
+              class="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+            >
+          </div>
+
+          <!-- Contraseña -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              required
+              minlength="8"
+              class="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+            >
+          </div>
+
+          <!-- Confirmar Contraseña -->
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-1">Confirmar contraseña</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              required
+              class="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+            >
+            <p id="password-error" class="hidden mt-1 text-xs text-red-500">Las contraseñas no coinciden</p>
+          </div>
+
+          <!-- Botón de submit -->
+          <div class="pt-1">
+            <button
+              type="submit"
+              class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md text-sm font-medium shadow-md shadow-red-900/20 transition-colors"
+            >
+              Crear cuenta
+            </button>
+          </div>
+        </form>
+
+        <!-- Enlace a inicio de sesión -->
+        <div class="mt-4  text-center">
+          <p class="text-sm text-gray-400">
+            ¿Ya tienes cuenta? 
+            <a href="/iniciarsesion" class="text-red-400 hover:underline">
+              Inicia sesión
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('registerForm');
+  const passwordInput = document.getElementById('password');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
+  const errorElement = document.getElementById('password-error');
+
+  // Validación en tiempo real
+  confirmPasswordInput.addEventListener('input', () => {
+    if (passwordInput.value !== confirmPasswordInput.value) {
+      errorElement.classList.remove('hidden');
+    } else {
+      errorElement.classList.add('hidden');
+    }
+  });
+
+  // Manejo del envío
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Validar contraseñas
+    if (passwordInput.value !== confirmPasswordInput.value) {
+      errorElement.classList.remove('hidden');
+      return;
+    }
+
+    // Crear objeto de usuario
+    const newUser = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      password: passwordInput.value
+    };
+
+    // Guardar en localStorage
+    const existingUsers = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    existingUsers.push(newUser);
+    localStorage.setItem('usuarios', JSON.stringify(existingUsers));
+
+    // Iniciar sesión automáticamente
+    localStorage.setItem('usuario', JSON.stringify({
+      email: newUser.email,
+      name: newUser.name,
+      isLoggedIn: true
+    }));
+
+    // Redirigir
+    const urlParams = new URLSearchParams(window.location.search);
+    window.location.href = urlParams.get('redirect') || '/';
+  });
+});
+</script>
+</body>
+</html>
