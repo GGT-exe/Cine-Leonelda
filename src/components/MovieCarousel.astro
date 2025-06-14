@@ -3,15 +3,26 @@ import { movies } from '../data/movies';
 import HorarioTabla from './HorarioTabla.astro';
 ---
 
-
+<!-- Contenedor principal del carrusel -->
 <div class="relative w-full" id="movieCarousel">
-  <!-- Contenedor principal del carrusel -->
+  <!-- Contenedor para efecto de overflow hidden -->
   <div class="overflow-hidden">
+    <!-- Contenedor flexible para las diapositivas -->
     <div class="flex transition-transform duration-500 ease-out" id="carouselContainer">
+      <!-- Loop para cada película -->
       {movies.map((movie) => (
-        <div class="w-full flex-shrink-0">
+        
+        <div class="w-full flex-shrink-0"> 
           <!-- Reproductor de YouTube -->
           <div class="w-full aspect-video bg-black relative">
+              <!-- IFRAME DE YOUTUBE
+               Muestra el trailer de la película
+               Usa el youtubeId de cada película
+               Configuración:
+                * autoplay=0: No autoplay (requerido por políticas de navegadores)
+                * controls=1: Muestra controles del reproductor
+              -->
+            
             <iframe 
               width="100%" 
               height="100%" 
@@ -21,21 +32,26 @@ import HorarioTabla from './HorarioTabla.astro';
               allowfullscreen
               class="absolute top-0 left-0 w-full h-full"
             ></iframe>
+            <!-- Gradiente decorativo en la parte inferior -->
             <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent"></div>
           </div>
 
-          <!-- Contenido debajo del video -->
+
+          <!-- SECCIÓN DE INFORMACIÓN DE LA PELÍCULA -->
           <div class="mx-auto w-full max-w-6xl px-4 py-12 bg-black">
             <div class="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8">
               <!-- Sección de sinopsis -->
               <div class="bg-gray-900/20 p-8 rounded-xl border border-red-600/50">
+                <!-- Badge de "Nuevo Estreno" y estrellas de rating -->
                 <div class="flex items-center mb-6">
                   <span class="px-4 py-2 bg-red-800 rounded-md text-sm text-white mr-4">NUEVO ESTRENO</span>
                   <div class="flex text-yellow-400 text-xl">
                     ★ ★ ★ ★ ☆
                   </div>
                 </div>
+                <!-- Título de la película -->
                 <h1 class="text-5xl font-bold mb-8 text-white">{movie.title}</h1>
+                <!-- Sinopsis/información -->
                 <p class="text-gray-100 text-xl leading-relaxed">{movie.info}</p>
 
                 <!-- Comentarios y votación -->
@@ -95,9 +111,12 @@ import HorarioTabla from './HorarioTabla.astro';
     </div>
   </div>
 
+  <!-- CONTROLES DEL CARRUSEL (solo si hay más de 1 película) -->
   {movies.length > 1 && (
     <>
       <!-- Botones de navegación flotantes -->
+
+      <!-- Botón anterior -->
       <button 
         class="carousel-button" 
         id="prevButton"
@@ -108,6 +127,7 @@ import HorarioTabla from './HorarioTabla.astro';
         </svg>
       </button>
 
+      <!-- Botón siguiente -->
       <button 
         class="carousel-button" 
         id="nextButton"
@@ -118,7 +138,7 @@ import HorarioTabla from './HorarioTabla.astro';
         </svg>
       </button>
 
-      <!-- Indicadores -->
+      <!-- Indicadores de posición -->
       <div class="flex justify-center gap-4 mt-8 pb-8" id="indicators">
         {movies.map((_, index) => (
           <button 
@@ -132,11 +152,16 @@ import HorarioTabla from './HorarioTabla.astro';
   )}
 </div>
 
+<!-- SCRIPT CON LA LÓGICA INTERACTIVA -->
 <script is:inline>
+// Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Script de MovieCarousel cargado');
 
-  // Función para verificar autenticación de forma segura
+    /**
+   * Función para verificar el estado de autenticación
+   * returns {boolean} True si el usuario está autenticado
+   */
   const verifyAuthState = () => {
     try {
       const userData = localStorage.getItem('usuarioActual');
