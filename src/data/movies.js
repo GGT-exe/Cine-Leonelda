@@ -1,5 +1,24 @@
 export const movies = [
+
   {
+    id: "entrenaratudragon",
+    title: "Cómo entrenar a tu dragón | Live Action",
+    youtubeId: "FQM-V1CF-Zw",
+    image: "/IMG/EntrenaAtuDragon.jpg",
+    info: "Cómo entrenar a tu dragón | Live Action sigue la historia de Hipo y su dragón, Toothless, mientras enfrentan nuevos desafíos en un mundo donde los dragones y los humanos deben aprender a coexistir.",
+    schedule: {
+      days: {
+        "Lunes": { times: ["14:00", "17:00", "20:30"], duration: "2h 15m", rating: "PG" },
+        "Martes": { times: ["15:00", "18:30", "21:45"], duration: "2h 15m", rating: "PG" },
+        "Miércoles": { times: ["13:30", "16:45", "20:00"], duration: "2h 15m", rating: "PG" },
+        "Jueves": { times: ["14:15", "17:30", "20:45"], duration: "2h 15m", rating: "PG" },
+        "Viernes": { times: ["12:00", "15:00", "18:00", "21:30"], duration: "2h 15m", rating: "PG" },
+        "Sábado": { times: ["11:00", "14:00", "17:00", "20:30"], duration: "2h 15m", rating: "PG" },
+        "Domingo": { times: ["11:30", "14:30", "17:30", "20:45"], duration: "2h 15m", rating: "PG" }
+      }
+    }
+  },
+    {
     id: "minecraft",
     title: "Minecraft: La Película",
     youtubeId: "bwAbeOvpfq0",
@@ -9,24 +28,6 @@ export const movies = [
       days: {
         "Lunes": { times: ["14:00", "17:00", "20:30"], duration: "2h 15m", rating: "PG-13" },
         "Martes": { times: ["15:00", "20:30", "21:45"], duration: "2h 15m", rating: "PG" },
-        "Miércoles": { times: ["13:30", "16:45", "20:00"], duration: "2h 15m", rating: "PG" },
-        "Jueves": { times: ["14:15", "17:30", "20:45"], duration: "2h 15m", rating: "PG" },
-        "Viernes": { times: ["12:00", "15:00", "18:00", "21:30"], duration: "2h 15m", rating: "PG" },
-        "Sábado": { times: ["11:00", "14:00", "17:00", "20:30"], duration: "2h 15m", rating: "PG" },
-        "Domingo": { times: ["11:30", "14:30", "17:30", "20:45"], duration: "2h 15m", rating: "PG" }
-      }
-    }
-  },
-  {
-    id: "duna2",
-    title: "Duna: Parte Dos",
-    youtubeId: "6OmJF6VjKMA",
-    image: "/IMG/Dune2.jpg",
-    info: "Duna: Parte Dos explora la travesía mítica de Paul Atreides y su alianza con Chani y los Fremen mientras busca vengarse de los conspiradores que acabaron con su familia. Ante la elección entre el amor de su vida y el destino del universo conocido, decide luchar por impedir un futuro terrible que solo él puede prever.",
-    schedule: {
-      days: {
-        "Lunes": { times: ["14:00", "17:00", "20:30"], duration: "2h 15m", rating: "PG" },
-        "Martes": { times: ["15:00", "18:30", "21:45"], duration: "2h 15m", rating: "PG" },
         "Miércoles": { times: ["13:30", "16:45", "20:00"], duration: "2h 15m", rating: "PG" },
         "Jueves": { times: ["14:15", "17:30", "20:45"], duration: "2h 15m", rating: "PG" },
         "Viernes": { times: ["12:00", "15:00", "18:00", "21:30"], duration: "2h 15m", rating: "PG" },

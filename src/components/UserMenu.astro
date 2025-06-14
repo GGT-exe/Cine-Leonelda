@@ -1,0 +1,67 @@
+---
+const currentUser = JSON.parse(localStorage.getItem('usuarioActual') || 'null');
+---
+
+<div class="relative">
+  <button id="userMenuButton" class="flex items-center gap-1 text-gray-300 hover:text-white transition-colors">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+    </svg>
+    {currentUser?.isLoggedIn && (
+      <span class="hidden md:inline text-sm">{currentUser.name || currentUser.email.split('@')[0]}</span>
+    )}
+  </button>
+
+  <!-- Menú desplegable -->
+  <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-black rounded-md shadow-lg border border-red-600 z-50">
+    {currentUser?.isLoggedIn ? (
+      <>
+        <div class="px-4 py-3 border-b border-red-600">
+          <p class="text-sm text-white">Hola, {currentUser.name || 'Usuario'}</p>
+          <p class="text-xs text-gray-400 truncate">{currentUser.email}</p>
+        </div>
+        <a href="/perfil" class="block px-4 py-2 text-sm text-white hover:bg-red-600">Mi perfil</a>
+        <a href="/mis-reservas" class="block px-4 py-2 text-sm text-white hover:bg-red-600">Mis reservas</a>
+        <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-white hover:bg-red-600">
+          Cerrar sesión
+        </button>
+      </>
+    ) : (
+      <>
+        <a href="/auth/iniciarsesion" class="block px-4 py-2 text-sm text-white hover:bg-red-600">Iniciar sesión</a>
+        <a href="/auth/crearcuenta" class="block px-4 py-2 text-sm text-white hover:bg-red-600">Crear cuenta</a>
+      </>
+    )}
+  </div>
+</div>
+
+<script is:inline>
+document.addEventListener('DOMContentLoaded', () => {
+  const userButton = document.getElementById('userMenuButton');
+  const dropdown = document.getElementById('userDropdown');
+  const logoutButton = document.getElementById('logoutButton');
+
+  // Toggle menú
+  if (userButton && dropdown) {
+    userButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('hidden');
+    });
+  }
+
+  // Cerrar sesión
+  if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+      localStorage.removeItem('usuarioActual');
+      window.location.href = '/';
+    });
+  }
+
+  // Cerrar al hacer clic fuera
+  document.addEventListener('click', () => {
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+      dropdown.classList.add('hidden');
+    }
+  });
+});
+</script>

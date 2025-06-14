@@ -1,8 +1,8 @@
 ---
 import { movies } from '../data/movies';
-import Horario from './Horario.astro';
 import HorarioTabla from './HorarioTabla.astro';
 ---
+
 
 <div class="relative w-full" id="movieCarousel">
   <!-- Contenedor principal del carrusel -->
@@ -40,8 +40,6 @@ import HorarioTabla from './HorarioTabla.astro';
 
                 <!-- Comentarios y votación -->
                 <div class="mt-10">
-                  <h3 class="text-2xl font-semibold text-white mb-4">Deja tu comentario</h3>
-
                   <!-- Votación por estrellas -->
                   <div class="flex items-center gap-1 mb-4 text-yellow-400 text-2xl cursor-pointer" data-rating="0" id={`rating-${movie.id}`}>
                     {[1, 2, 3, 4, 5].map(i => (
@@ -55,19 +53,22 @@ import HorarioTabla from './HorarioTabla.astro';
                     ))}
                   </div>
 
-                  <!-- Campo de texto para comentario -->
-                  <textarea 
-                    class="w-full p-4 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    rows="4"
-                    placeholder="Escribe tu opinión sobre la película..."
-                  ></textarea>
+                  <!-- Sección de comentarios -->
+                  <div class="comment-section space-y-6">
+                    <h3 class="text-2xl font-bold text-white mb-4">Comentarios</h3>
+                    
+                    <!-- Contenedor del formulario -->
+                    <div id={`commentForm-${movie.id}`}>
+                      <div class="text-center py-4 bg-gray-800/30 rounded-lg">
+                        <p class="text-gray-400">Cargando estado de autenticación...</p>
+                      </div>
+                    </div>
 
-                  <!-- Botón de enviar -->
-                  <button 
-                    class="mt-4 px-6 py-3 bg-red-700 hover:bg-red-800 text-white rounded-lg font-semibold transition-colors"
-                  >
-                    Enviar comentario
-                  </button>
+                    <!-- Lista de comentarios -->
+                    <div id={`commentsContainer-${movie.id}`} class="space-y-4">
+                      <!-- Comentarios se cargarán aquí -->
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -98,10 +99,9 @@ import HorarioTabla from './HorarioTabla.astro';
     <>
       <!-- Botones de navegación flotantes -->
       <button 
-        class="fixed left-4 transition-all duration-300 bg-black/80 hover:bg-amber-700 text-white p-3 rounded-full z-50 shadow-lg hover:scale-110"
+        class="carousel-button" 
         id="prevButton"
         aria-label="Película anterior"
-        style="top: 50vh"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -109,10 +109,9 @@ import HorarioTabla from './HorarioTabla.astro';
       </button>
 
       <button 
-        class="fixed right-4 transition-all duration-300 bg-black/80 hover:bg-amber-700 text-white p-3 rounded-full z-50 shadow-lg hover:scale-110"
+        class="carousel-button" 
         id="nextButton"
         aria-label="Siguiente película"
-        style="top: 50vh"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -123,7 +122,7 @@ import HorarioTabla from './HorarioTabla.astro';
       <div class="flex justify-center gap-4 mt-8 pb-8" id="indicators">
         {movies.map((_, index) => (
           <button 
-            class={`w-10 h-2 rounded-full transition-all ${index === 0 ? 'bg-amber-500' : 'bg-gray-600'}`}
+            class={`w-6 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-amber-500 w-10' : 'bg-gray-600'}`}
             data-index={index}
             aria-label={`Ir a película ${index + 1}`}
           />
@@ -135,6 +134,23 @@ import HorarioTabla from './HorarioTabla.astro';
 
 <script is:inline>
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('Script de MovieCarousel cargado');
+
+  // Función para verificar autenticación de forma segura
+  const verifyAuthState = () => {
+    try {
+      const userData = localStorage.getItem('usuarioActual');
+      if (!userData) return false;
+      
+      const currentUser = JSON.parse(userData);
+      return !!(currentUser?.isLoggedIn && currentUser?.email && currentUser?.name);
+    } catch (error) {
+      console.error('Error verificando autenticación:', error);
+      return false;
+    }
+  };
+
+  // 1. Lógica del Carrusel
   const container = document.getElementById('carouselContainer');
   const prevBtn = document.getElementById('prevButton');
   const nextBtn = document.getElementById('nextButton');
@@ -143,66 +159,292 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentIndex = 0;
   const totalMovies = document.querySelectorAll('#carouselContainer > div').length;
 
-  // Carrusel
-  function updateArrowPosition() {
-    const scrollPosition = window.scrollY;
-    const windowHeight = window.innerHeight;
-    const videoHeight = document.querySelector('iframe')?.offsetHeight || 0;
-    const maxScroll = document.body.scrollHeight - windowHeight;
-    const newPosition = Math.min(scrollPosition + (windowHeight / 2), maxScroll);
-    if (scrollPosition > videoHeight * 0.7) {
-      prevBtn.style.top = `${newPosition}px`;
-      nextBtn.style.top = `${newPosition}px`;
-    } else {
-      prevBtn.style.top = `${videoHeight * 0.5}px`;
-      nextBtn.style.top = `${videoHeight * 0.5}px`;
+  function updateCarousel() {
+    container.style.transform = `translateX(-${currentIndex * 100}%)`;
+    
+    if (indicators) {
+      indicators.forEach((indicator, i) => {
+        if (i === currentIndex) {
+          indicator.classList.add('bg-amber-500', 'w-10');
+          indicator.classList.remove('bg-gray-600', 'w-6');
+        } else {
+          indicator.classList.add('bg-gray-600', 'w-6');
+          indicator.classList.remove('bg-amber-500', 'w-10');
+        }
+      });
     }
   }
 
-  function updateCarousel() {
-    container.style.transform = `translateX(-${currentIndex * 100}%)`;
-    indicators.forEach((indicator, i) => {
-      indicator.classList.toggle('bg-amber-500', i === currentIndex);
-      indicator.classList.toggle('bg-gray-600', i !== currentIndex);
-      indicator.classList.toggle('w-10', i === currentIndex);
-      indicator.classList.toggle('w-6', i !== currentIndex);
-    });
-  }
-
   if (totalMovies > 1) {
-    window.addEventListener('scroll', updateArrowPosition);
-    prevBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + totalMovies) % totalMovies;
-      updateCarousel();
-    });
-    nextBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % totalMovies;
-      updateCarousel();
-    });
-    indicators.forEach(indicator => {
-      indicator.addEventListener('click', () => {
-        currentIndex = parseInt(indicator.dataset.index);
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + totalMovies) % totalMovies;
         updateCarousel();
       });
-    });
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % totalMovies;
+        updateCarousel();
+      });
+    }
+    
+    if (indicators) {
+      indicators.forEach(indicator => {
+        indicator.addEventListener('click', () => {
+          currentIndex = parseInt(indicator.dataset.index);
+          updateCarousel();
+        });
+      });
+    }
   }
 
-  updateCarousel();
-  updateArrowPosition();
-
-  // Calificación por estrellas
+  // 2. Calificación por estrellas
   document.querySelectorAll('.star').forEach(star => {
     star.addEventListener('click', () => {
+      if (!verifyAuthState()) {
+        alert('Debes iniciar sesión para votar');
+        return;
+      }
+
       const movieId = star.dataset.movieid;
       const rating = parseInt(star.dataset.value);
       const container = document.getElementById(`rating-${movieId}`);
-      container.dataset.rating = rating;
-
-      container.querySelectorAll('.star').forEach(s => {
-        const val = parseInt(s.dataset.value);
-        s.style.color = val <= rating ? '#facc15' : '#555';
-      });
+      
+      if (container) {
+        container.dataset.rating = rating;
+        container.querySelectorAll('.star').forEach(s => {
+          const val = parseInt(s.dataset.value);
+          s.style.color = val <= rating ? '#facc15' : '#555';
+        });
+      }
     });
   });
+
+  // 3. Lógica de Comentarios (mejorada y segura)
+  document.querySelectorAll('#carouselContainer > div').forEach(movieSlide => {
+    const starElement = movieSlide.querySelector('.star');
+    if (!starElement) return;
+    
+    const movieId = starElement.dataset.movieid;
+    const commentFormContainer = document.getElementById(`commentForm-${movieId}`);
+    const commentsContainer = document.getElementById(`commentsContainer-${movieId}`);
+    
+    if (!commentFormContainer || !commentsContainer) return;
+
+    // Función para cargar comentarios
+    const loadComments = () => {
+      try {
+        const commentsData = localStorage.getItem('peliculaComentarios');
+        const allComments = commentsData ? JSON.parse(commentsData) : {};
+        const movieComments = allComments[movieId] || [];
+        
+        commentsContainer.innerHTML = movieComments.map(comment => `
+          <div class="bg-gray-800/40 p-4 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-red-400">${comment.userName}</span>
+                <span class="text-xs text-gray-400">
+                  ${new Date(comment.date).toLocaleDateString('es-ES', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </span>
+              </div>
+              ${
+                (() => {
+                  try {
+                    const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+                    if (usuarioActual && comment.userId === usuarioActual.email) {
+                      return `
+                        <button 
+                          onclick="deleteComment('${movieId}', '${comment.id}')"
+                          class="text-xs text-gray-400 hover:text-red-400"
+                        >
+                          Eliminar
+                        </button>
+                      `;
+                    }
+                  } catch (e) {}
+                  return '';
+                })()
+              }
+            </div>
+            <p class="text-gray-200">${comment.text}</p>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error cargando comentarios:', error);
+        commentsContainer.innerHTML = `
+          <div class="text-center py-4 text-red-400">
+            Error cargando comentarios. Recarga la página.
+          </div>
+        `;
+      }
+    };
+
+    // Actualizar formulario basado en autenticación
+    const updateCommentForm = () => {
+      const isAuthenticated = verifyAuthState();
+      const currentUser = isAuthenticated ? JSON.parse(localStorage.getItem('usuarioActual')) : null;
+
+      if (isAuthenticated && currentUser) {
+        commentFormContainer.innerHTML = `
+          <div class="bg-gray-800/50 p-4 rounded-lg">
+            <textarea
+              id="commentInput-${movieId}"
+              class="w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:ring-2 focus:ring-red-500"
+              rows="3"
+              placeholder="Escribe tu comentario..."
+              maxlength="500"
+            ></textarea>
+            <div class="flex justify-between items-center mt-2">
+              <span class="text-xs text-gray-400" id="charCounter-${movieId}">0/500</span>
+              <button
+                id="submitComment-${movieId}"
+                class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
+              >
+                Enviar comentario
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Contador de caracteres
+        const textInput = document.getElementById(`commentInput-${movieId}`);
+        const charCounter = document.getElementById(`charCounter-${movieId}`);
+        
+        textInput?.addEventListener('input', () => {
+          charCounter.textContent = `${textInput.value.length}/500`;
+        });
+
+        // Manejar envío de comentario
+        const submitButton = document.getElementById(`submitComment-${movieId}`);
+        if (submitButton) {
+          submitButton.addEventListener('click', async () => {
+            const textInput = document.getElementById(`commentInput-${movieId}`);
+            if (!textInput) return;
+            
+            const text = textInput.value.trim();
+            if (!text) {
+              alert('Por favor escribe un comentario');
+              return;
+            }
+
+            // Verificación EXTRA de seguridad
+            const currentUser = JSON.parse(localStorage.getItem('usuarioActual'));
+            if (!currentUser?.isLoggedIn || !currentUser?.email || !currentUser?.name) {
+              alert('Sesión inválida. Por favor inicia sesión nuevamente.');
+              updateCommentForm();
+              return;
+            }
+
+            // Verificar conexión
+            if (!navigator.onLine) {
+              alert('No estás conectado a internet. No se puede enviar el comentario.');
+              return;
+            }
+
+            // Configurar estado de carga
+            submitButton.disabled = true;
+            submitButton.innerHTML = `
+              <span class="comment-loading"></span> Enviando...
+            `;
+
+            try {
+              const newComment = {
+                id: Date.now().toString(),
+                movieId: movieId,
+                userId: currentUser.email, // Obligatorio
+                userName: currentUser.name, // Obligatorio
+                text,
+                date: new Date().toISOString()
+              };
+
+              // Guardar en localStorage
+              const allComments = JSON.parse(localStorage.getItem('peliculaComentarios') || '{}');
+              if (!allComments[movieId]) allComments[movieId] = [];
+              allComments[movieId].unshift(newComment);
+              
+              localStorage.setItem('peliculaComentarios', JSON.stringify(allComments));
+              textInput.value = '';
+              document.getElementById(`charCounter-${movieId}`).textContent = '0/500';
+              loadComments();
+              
+            } catch (error) {
+              console.error('Error al guardar el comentario:', error);
+              alert('Error al guardar el comentario. Intenta nuevamente.');
+            } finally {
+              submitButton.disabled = false;
+              submitButton.textContent = 'Enviar comentario';
+            }
+          });
+        }
+      } else {
+        // Mostrar mensaje de login
+        const currentPath = window.location.pathname;
+        const loginUrl = `/iniciarsesion?redirect=${encodeURIComponent(currentPath)}`;
+        
+        commentFormContainer.innerHTML = `
+          <div class="text-center py-4 bg-gray-800/30 rounded-lg">
+            <p class="text-gray-400">
+              <a href="${loginUrl}" class="text-red-400 hover:underline">
+                Inicia sesión
+              </a> para comentar
+            </p>
+          </div>
+        `;
+      }
+    };
+
+    // Función para eliminar comentarios con verificación
+    window.deleteComment = (movieId, commentId) => {
+      if (!verifyAuthState()) {
+        alert('Debes iniciar sesión para realizar esta acción');
+        return;
+      }
+
+      if (!confirm('¿Eliminar este comentario?')) return;
+      
+      try {
+        const currentUser = JSON.parse(localStorage.getItem('usuarioActual'));
+        const allComments = JSON.parse(localStorage.getItem('peliculaComentarios') || '{}');
+        
+        if (allComments[movieId]) {
+          // Verificar que el comentario pertenece al usuario
+          const comment = allComments[movieId].find(c => c.id === commentId);
+          if (comment && comment.userId === currentUser.email) {
+            allComments[movieId] = allComments[movieId].filter(c => c.id !== commentId);
+            localStorage.setItem('peliculaComentarios', JSON.stringify(allComments));
+            loadComments();
+          } else {
+            alert('No tienes permiso para eliminar este comentario');
+          }
+        }
+      } catch (error) {
+        console.error('Error eliminando comentario:', error);
+        alert('Error al eliminar el comentario');
+      }
+    };
+
+    // Inicializar
+    updateCommentForm();
+    loadComments();
+
+    // Escuchar cambios en autenticación
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'usuarioActual') {
+        updateCommentForm();
+        loadComments();
+      }
+    });
+  });
+
+  // Inicializar carrusel
+  updateCarousel();
 });
 </script>

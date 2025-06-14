@@ -1,8 +1,10 @@
 ---
-import CrearCuenta from "../components/CrearCuenta.astro";    
-import Layout from "../layouts/Layout.astro";
+import Layout from '../layouts/Layout.astro';
+import RegisterForm from '../components/auth/RegisterForm.astro';
+
+const email = Astro.url.searchParams.get('email');
 ---
 
 <Layout>
-    <CrearCuenta />
+  <RegisterForm initialEmail={email} />
 </Layout>
